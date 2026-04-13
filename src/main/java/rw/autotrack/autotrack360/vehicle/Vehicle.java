@@ -1,0 +1,28 @@
+package rw.autotrack.autotrack360.vehicle;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "vehicles")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class Vehicle {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String vin;
+
+    private String make;
+    private String model;
+    private Integer year;
+    private String color;
+
+    @Enumerated(EnumType.STRING)
+    private VehicleStatus status;
+
+    private BigDecimal price;
+}
