@@ -36,4 +36,13 @@ public class ShipmentController {
     public ResponseEntity<ShipmentDTO> updateStatus(@PathVariable Long id, @RequestParam ShipmentStatus status) {
         return ResponseEntity.ok(shipmentService.updateStatus(id, status));
     }
+
+    /**
+     * Public endpoint — no auth required. Customers use this to track their shipment.
+     * GET /api/shipments/track/{trackingNumber}
+     */
+    @GetMapping("/track/{trackingNumber}")
+    public ResponseEntity<ShipmentDTO> track(@PathVariable String trackingNumber) {
+        return ResponseEntity.ok(shipmentService.trackByNumber(trackingNumber));
+    }
 }

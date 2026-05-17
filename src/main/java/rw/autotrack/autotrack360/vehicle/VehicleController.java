@@ -1,8 +1,14 @@
 package rw.autotrack.autotrack360.vehicle;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,7 +24,11 @@ public class VehicleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VehicleDTO>> getAll() {
+    public ResponseEntity<List<VehicleDTO>> getAll(@RequestParam(required = false) VehicleStatus status) {
+        if (status != null) {
+            return ResponseEntity.ok(vehicleService.findAll().stream()
+                    .filter(v -> v.getStatus() == status).toList());
+        }
         return ResponseEntity.ok(vehicleService.findAll());
     }
 
@@ -35,5 +45,35 @@ public class VehicleController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<VehicleDTO> changeStatus(@PathVariable Long id, @RequestParam VehicleStatus status) {
         return ResponseEntity.ok(vehicleService.changeStatus(id, status));
+    }
+
+    // ── Images ──────────────────────────────────────────────
+
+    @PostMapping("/{id}/images")
+    public ResponseEntity<VehicleImageDTO> uploadImage(@PathVariable Long id,
+                                                       @RequestParam MultipartFile file) throws IOException {
+        return ResponseEntity.ok(vehicleService.uploadImage(id, file));
+    }
+
+    @GetMapping("/{id}/images")
+    public ResponseEntity<List<VehicleImageDTO>> getImages(@PathVariable Long id) {
+        return ResponseEntity.ok(vehicleService.getImages(id));
+    }
+
+    @GetMapping("/{id}/images/{filename}")
+    public ResponseEntity<Resource> serveImage(@PathVariable Long id,
+                                               @PathVariable String filename) throws IOException {
+        Resource resource = vehicleService.serveImage(id, filename);
+        String contentType = filename.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+    }
+
+    @DeleteMapping("/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
+        vehicleService.deleteImage(imageId);
+        return ResponseEntity.noContent().build();
     }
 }

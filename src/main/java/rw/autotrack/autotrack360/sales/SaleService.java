@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import rw.autotrack.autotrack360.inventory.InventoryItem;
 import rw.autotrack.autotrack360.inventory.InventoryService;
 import rw.autotrack.autotrack360.inventory.InventoryStatus;
+import rw.autotrack.autotrack360.notification.EmailService;
+import rw.autotrack.autotrack360.notification.SmsService;
 import rw.autotrack.autotrack360.vehicle.Vehicle;
 import rw.autotrack.autotrack360.vehicle.VehicleService;
 import rw.autotrack.autotrack360.vehicle.VehicleStatus;
@@ -20,6 +22,8 @@ public class SaleService {
     private final CustomerRepository customerRepository;
     private final VehicleService vehicleService;
     private final InventoryService inventoryService;
+    private final SmsService smsService;
+    private final EmailService emailService;
 
     public SaleDTOs.CustomerDTO createCustomer(SaleDTOs.CreateCustomerRequest req) {
         Customer customer = Customer.builder()
@@ -45,13 +49,28 @@ public class SaleService {
                 .status(SaleStatus.PENDING)
                 .build();
 
-        // Reserve in inventory
         try {
             InventoryItem item = inventoryService.getByVehicleId(vehicle.getId());
             item.setStatus(InventoryStatus.RESERVED);
         } catch (Exception ignored) {}
 
-        return SaleDTOs.SaleDTO.from(saleRepository.save(sale));
+        Sale saved = saleRepository.save(sale);
+
+        // Notify customer via SMS + Email
+        if (customer.getPhone() != null && !customer.getPhone().isBlank()) {
+            smsService.send(customer.getPhone(),
+                    "Dear " + customer.getName() + ", your order for " + vehicle.getMake()
+                    + " " + vehicle.getModel() + " has been received. Sale ID: #" + saved.getId()
+                    + ". AutoTrack360");
+        }
+        emailService.sendOrderConfirmation(
+            customer.getEmail(), customer.getName(),
+            vehicle.getMake(), vehicle.getModel(),
+            String.valueOf(saved.getId()),
+            req.getTotalAmount().toPlainString()
+        );
+
+        return SaleDTOs.SaleDTO.from(saved);
     }
 
     public SaleDTOs.SaleDTO completeSale(Long id) {
@@ -65,8 +84,18 @@ public class SaleService {
             item.setStatus(InventoryStatus.SOLD);
         } catch (Exception ignored) {}
 
-        System.out.println("[NOTIFICATION] Sale #" + id + " completed for customer: " + sale.getCustomer().getName());
-        return SaleDTOs.SaleDTO.from(saleRepository.save(sale));
+        Sale saved = saleRepository.save(sale);
+
+        // SMS confirmation to customer
+        smsService.sendSaleConfirmation(
+                sale.getCustomer().getPhone(),
+                sale.getCustomer().getName(),
+                sale.getVehicle().getMake(),
+                sale.getVehicle().getModel(),
+                String.valueOf(saved.getId())
+        );
+
+        return SaleDTOs.SaleDTO.from(saved);
     }
 
     public List<SaleDTOs.SaleDTO> findAll() {

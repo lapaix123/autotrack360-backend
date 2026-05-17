@@ -19,6 +19,12 @@ public class Shipment {
     private String origin;
     private String destination;
 
+    @Column(unique = true)
+    private String trackingNumber;
+
+    private String estimatedArrival;
+    private String notes;
+
     @Enumerated(EnumType.STRING)
     private ShipmentStatus status;
 

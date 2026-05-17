@@ -39,6 +39,8 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/shipments/track/**").permitAll()
+                .requestMatchers("/api/vehicles/*/images/*").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())

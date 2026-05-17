@@ -12,6 +12,9 @@ public class ShipmentDTO {
     private String name;
     private String origin;
     private String destination;
+    private String trackingNumber;
+    private String estimatedArrival;
+    private String notes;
     private ShipmentStatus status;
     private List<VehicleDTO> vehicles;
 
@@ -21,6 +24,9 @@ public class ShipmentDTO {
         dto.setName(s.getName());
         dto.setOrigin(s.getOrigin());
         dto.setDestination(s.getDestination());
+        dto.setTrackingNumber(s.getTrackingNumber());
+        dto.setEstimatedArrival(s.getEstimatedArrival());
+        dto.setNotes(s.getNotes());
         dto.setStatus(s.getStatus());
         dto.setVehicles(s.getVehicles().stream().map(VehicleDTO::from).collect(Collectors.toList()));
         return dto;
