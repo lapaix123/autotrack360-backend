@@ -41,7 +41,7 @@ public class LogisticsDashboardDTO {
         private String make;
         private String model;
         private Integer year;
-        private String vin;
+        private String chassisNumber;
         private String status;
         private String imageUrl;
     }

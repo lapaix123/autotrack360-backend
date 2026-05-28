@@ -16,6 +16,11 @@ public class ShipmentDTO {
     private String estimatedArrival;
     private String notes;
     private ShipmentStatus status;
+    private Double currentLatitude;
+    private Double currentLongitude;
+    private String currentLocation;
+    private String lastGpsUpdate;
+    private String shippingCompanyName;
     private List<VehicleDTO> vehicles;
 
     public static ShipmentDTO from(Shipment s) {
@@ -28,6 +33,11 @@ public class ShipmentDTO {
         dto.setEstimatedArrival(s.getEstimatedArrival());
         dto.setNotes(s.getNotes());
         dto.setStatus(s.getStatus());
+        dto.setCurrentLatitude(s.getCurrentLatitude());
+        dto.setCurrentLongitude(s.getCurrentLongitude());
+        dto.setCurrentLocation(s.getCurrentLocation());
+        dto.setLastGpsUpdate(s.getLastGpsUpdate() != null ? s.getLastGpsUpdate().toString() : null);
+        dto.setShippingCompanyName(s.getShippingCompanyName());
         dto.setVehicles(s.getVehicles().stream().map(VehicleDTO::from).collect(Collectors.toList()));
         return dto;
     }

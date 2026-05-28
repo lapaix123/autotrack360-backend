@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 @Data
 public class VehicleDTO {
     private Long id;
-    private String vin;
+    private String chassisNumber;
     private String make;
     private String model;
     private Integer year;
@@ -24,7 +24,7 @@ public class VehicleDTO {
     public static VehicleDTO from(Vehicle v) {
         VehicleDTO dto = new VehicleDTO();
         dto.setId(v.getId());
-        dto.setVin(v.getVin());
+        dto.setChassisNumber(v.getChassisNumber());
         dto.setMake(v.getMake());
         dto.setModel(v.getModel());
         dto.setYear(v.getYear());

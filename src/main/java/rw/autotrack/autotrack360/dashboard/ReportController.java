@@ -46,7 +46,7 @@ public class ReportController {
             s.getCustomer().getName(),
             s.getCustomer().getEmail() != null ? s.getCustomer().getEmail() : "",
             s.getVehicle().getMake() + " " + s.getVehicle().getModel(),
-            s.getVehicle().getVin(),
+            s.getVehicle().getChassisNumber(),
             s.getTotalAmount(),
             s.getStatus().name()
         )).toList();
@@ -63,7 +63,7 @@ public class ReportController {
                .append(escape(s.getCustomer().getName())).append(",")
                .append(escape(s.getCustomer().getEmail())).append(",")
                .append(escape(s.getVehicle().getMake() + " " + s.getVehicle().getModel())).append(",")
-               .append(escape(s.getVehicle().getVin())).append(",")
+               .append(escape(s.getVehicle().getChassisNumber())).append(",")
                .append(s.getTotalAmount()).append(",")
                .append(s.getStatus().name()).append("\n");
         }
@@ -79,7 +79,7 @@ public class ReportController {
         for (Vehicle v : vehicles) byStatus.merge(v.getStatus().name(), 1L, Long::sum);
 
         List<VehicleRow> rows = vehicles.stream().map(v -> new VehicleRow(
-            v.getId(), v.getVin(), v.getMake(), v.getModel(),
+            v.getId(), v.getChassisNumber(), v.getMake(), v.getModel(),
             v.getYear(), v.getColor(), v.getStatus().name(), v.getPrice()
         )).toList();
 
@@ -92,7 +92,7 @@ public class ReportController {
         StringBuilder csv = new StringBuilder("ID,VIN,Make,Model,Year,Color,Status,Price\n");
         for (Vehicle v : vehicles) {
             csv.append(v.getId()).append(",")
-               .append(escape(v.getVin())).append(",")
+               .append(escape(v.getChassisNumber())).append(",")
                .append(escape(v.getMake())).append(",")
                .append(escape(v.getModel())).append(",")
                .append(v.getYear()).append(",")

@@ -36,22 +36,30 @@ public class DataLoader implements CommandLineRunner {
                     .name("Logistics Officer").email("logistics@autotrack360.com")
                     .password(passwordEncoder.encode("logistics123")).role(Role.LOGISTICS).build());
 
+            userRepository.save(User.builder()
+                    .name("Demo Customer").email("customer@autotrack360.com")
+                    .password(passwordEncoder.encode("customer123")).role(Role.CUSTOMER).build());
+
+            userRepository.save(User.builder()
+                    .name("FastShip Ltd").email("shipping@autotrack360.com")
+                    .password(passwordEncoder.encode("shipping123")).role(Role.SHIPPING_COMPANY).build());
+
             System.out.println("[DataLoader] Users seeded.");
         }
 
         if (vehicleRepository.count() == 0) {
             vehicleRepository.save(Vehicle.builder()
-                    .vin("1HGCM82633A123456").make("Toyota").model("Land Cruiser")
+                    .chassisNumber("1HGCM82633A123456").make("Toyota").model("Land Cruiser")
                     .year(2023).color("White").status(VehicleStatus.AVAILABLE)
                     .price(new BigDecimal("75000.00")).build());
 
             vehicleRepository.save(Vehicle.builder()
-                    .vin("2T1BURHE0JC123457").make("Honda").model("CR-V")
+                    .chassisNumber("2T1BURHE0JC123457").make("Honda").model("CR-V")
                     .year(2022).color("Black").status(VehicleStatus.IMPORTED)
                     .price(new BigDecimal("35000.00")).build());
 
             vehicleRepository.save(Vehicle.builder()
-                    .vin("3VWFE21C04M123458").make("Mercedes").model("GLE 350")
+                    .chassisNumber("3VWFE21C04M123458").make("Mercedes").model("GLE 350")
                     .year(2023).color("Silver").status(VehicleStatus.IN_TRANSIT)
                     .price(new BigDecimal("95000.00")).build());
 

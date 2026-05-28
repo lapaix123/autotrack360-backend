@@ -15,8 +15,8 @@ public class Vehicle {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String vin;
+    @Column(unique = true, nullable = false, length = 17)
+    private String chassisNumber;
 
     private String make;
     private String model;

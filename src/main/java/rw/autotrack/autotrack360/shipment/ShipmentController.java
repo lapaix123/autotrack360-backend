@@ -38,6 +38,19 @@ public class ShipmentController {
     }
 
     /**
+     * SHIPPING_COMPANY: update GPS location of a shipment
+     * PATCH /api/shipments/{id}/gps
+     */
+    @PatchMapping("/{id}/gps")
+    public ResponseEntity<ShipmentDTO> updateGps(
+            @PathVariable Long id,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
+            @RequestParam(required = false) String location) {
+        return ResponseEntity.ok(shipmentService.updateGps(id, lat, lng, location));
+    }
+
+    /**
      * Public endpoint — no auth required. Customers use this to track their shipment.
      * GET /api/shipments/track/{trackingNumber}
      */

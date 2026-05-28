@@ -62,6 +62,16 @@ public class ShipmentService {
         return ShipmentDTO.from(shipmentRepository.save(shipment));
     }
 
+    public ShipmentDTO updateGps(Long id, Double lat, Double lng, String location) {
+        Shipment shipment = shipmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Shipment not found"));
+        shipment.setCurrentLatitude(lat);
+        shipment.setCurrentLongitude(lng);
+        if (location != null && !location.isBlank()) shipment.setCurrentLocation(location);
+        shipment.setLastGpsUpdate(java.time.LocalDateTime.now());
+        return ShipmentDTO.from(shipmentRepository.save(shipment));
+    }
+
     public ShipmentDTO updateStatus(Long id, ShipmentStatus status) {
         Shipment shipment = shipmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shipment not found"));

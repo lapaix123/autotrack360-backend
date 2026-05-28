@@ -25,8 +25,12 @@ public class VehicleService {
     private String baseUrl;
 
     public VehicleDTO create(VehicleDTO dto) {
+        if (dto.getChassisNumber() == null || dto.getChassisNumber().trim().length() != 17) {
+            throw new RuntimeException("Chassis number must be exactly 17 characters");
+        }
         Vehicle vehicle = Vehicle.builder()
-                .vin(dto.getVin()).make(dto.getMake()).model(dto.getModel())
+                .chassisNumber(dto.getChassisNumber().toUpperCase().trim())
+                .make(dto.getMake()).model(dto.getModel())
                 .year(dto.getYear()).color(dto.getColor())
                 .description(dto.getDescription())
                 .engineType(dto.getEngineType())

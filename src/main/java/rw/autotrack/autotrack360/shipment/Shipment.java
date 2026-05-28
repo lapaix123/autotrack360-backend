@@ -25,6 +25,15 @@ public class Shipment {
     private String estimatedArrival;
     private String notes;
 
+    // GPS tracking
+    private Double currentLatitude;
+    private Double currentLongitude;
+    private String currentLocation;   // human-readable location name
+    private java.time.LocalDateTime lastGpsUpdate;
+
+    // Shipping company user who manages this shipment
+    private String shippingCompanyName;
+
     @Enumerated(EnumType.STRING)
     private ShipmentStatus status;
 

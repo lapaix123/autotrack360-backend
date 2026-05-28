@@ -121,7 +121,7 @@ public class DashboardService {
                 String imgUrl = v.getImages() != null && !v.getImages().isEmpty()
                     ? v.getImages().get(0).getUrl() : null;
                 return new LogisticsDashboardDTO.RecentVehicle(
-                    v.getId(), v.getMake(), v.getModel(), v.getYear(), v.getVin(),
+                    v.getId(), v.getMake(), v.getModel(), v.getYear(), v.getChassisNumber(),
                     v.getStatus().name(), imgUrl);
             }).collect(Collectors.toList());
 
